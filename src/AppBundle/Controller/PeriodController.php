@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\BookedShift;
 use AppBundle\Entity\Period;
+use AppBundle\Entity\PeriodException;
 use AppBundle\Entity\PeriodPosition;
 use AppBundle\Entity\Shift;
 use AppBundle\Entity\User;
@@ -32,13 +33,29 @@ class PeriodController extends Controller
      */
     public function indexAction(Request $request)
     {
+        $session = new Session();
+
         $em = $this->getDoctrine()->getManager();
         $periods = array();
         for($i=0;$i<7;$i++){
             $periods[$i] = $em->getRepository('AppBundle:Period')->findBy(array('dayOfWeek'=>$i),array('start'=>'ASC'));
         }
+
+        $exception = new PeriodException();
+
+        $form = $this->createForm('AppBundle\Form\PeriodExceptionType',$exception);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $time = $form->get('date')->getData();
+            $exception->setDate(new \DateTime($time));
+            $em->persist($exception);
+            $em->flush();
+            $session->getFlashBag()->add('success', 'La nouvelle exception a bien été créé !');
+            //return $this->redirectToRoute('exception_edit',array('id'=>$exception->getId()));
+        }
         return $this->render('admin/period/list.html.twig',array(
-            "periods" => $periods
+            "periods" => $periods,
+            "exception_form" => $form->createView()
         ));
     }
 

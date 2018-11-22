@@ -50,6 +50,14 @@ class Period
      */
     private $job;
 
+
+    /**
+     * One Period can have one exception
+     * @ORM\ManyToOne(targetEntity="PeriodException")
+     * @ORM\JoinColumn(name="exception_id", referencedColumnName="id")
+     */
+    private $exception;
+
     /**
      * Many Period have Many Positions.
      * @ORM\ManyToMany(targetEntity="PeriodPosition", mappedBy="periods",cascade={"persist"})
@@ -171,6 +179,31 @@ class Period
     public function getJob()
     {
         return $this->job;
+    }
+
+
+    /**
+     * Set exeption
+     *
+     * @param \AppBundle\Entity\PeriodException $exception
+     *
+     * @return Period
+     */
+    public function setException(\AppBundle\Entity\PeriodException $exception = null)
+    {
+        $this->exception = $exception;
+
+        return $this;
+    }
+
+    /**
+     * Get exeption
+     *
+     * @return \AppBundle\Entity\PeriodException
+     */
+    public function getException()
+    {
+        return $this->exception;
     }
 
     /**

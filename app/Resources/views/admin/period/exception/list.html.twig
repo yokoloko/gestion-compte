@@ -1,0 +1,68 @@
+{% extends 'layout.html.twig' %}
+
+{% block breadcrumps %}
+    <a href="{{ path('homepage') }}"><i class="material-icons">home</i></a> <i class="material-icons">chevron_right</i>
+    <a href="{{ path('admin') }}"><i class="material-icons">tune</i>admin</a> <i class="material-icons">chevron_right</i>
+    <a href="{{ path('period') }}"><i class="material-icons">date_range</i>Semaine type</a> <i class="material-icons">chevron_right</i>
+    <i class="material-icons">date_range</i>exceptions
+{% endblock %}
+
+{% block content %}
+    <h4 class="">Exeptions</h4>
+
+    <ul>
+    {% for exception in exceptions %}
+        <li>{{ exception.date | date_fr_full }}</li>
+        {#<a href="{{ path("period_edit",{'id': period.id}) }}">#}
+            {#<div class="card-panel {% if period.job %}{{ period.job.color }}{% else %}blue{% endif %} lighten-2">#}
+                 {#<p class="white-text">#}
+                     {#{% if period.job %}<b class="white-text">{{ period.job.name }}</b>{% endif %}<br>#}
+                      {#{{ period.start | date('H:i') }}-{{ period.end | date('H:i') }}<br>#}
+                      {#{% for position in period.positions %}#}
+                          {#<i class="material-icons">person</i>{{ position }}#}
+                      {#{% endfor %}#}
+                  {#</p>#}
+            {#</div>#}
+        {#</a>#}
+    {% endfor %}
+    </ul>
+
+    <h5>Nouvelle exception</h5>
+    {{ form_start(form) }}
+    {{ form_widget(form) }}
+    <div>
+        <button type="submit" class="btn-large waves-effect waves-light">Créer</button>
+    </div>
+    {{ form_end(form) }}
+
+
+{% endblock %}
+{% block javascripts %}
+    <script>
+        jQuery.extend( jQuery.fn.pickadate.defaults, {
+            monthsFull: [ 'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre' ],
+            monthsShort: [ 'Jan', 'Fev', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Aou', 'Sep', 'Oct', 'Nov', 'Dec' ],
+            weekdaysFull: [ 'Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi' ],
+            weekdaysShort: [ 'Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam' ],
+            today: 'Aujourd\'hui',
+            clear: 'Effacer',
+            close: 'Fermer',
+            firstDay: 1,
+            format: 'yyyy-mm-dd',
+            formatSubmit: 'yyyy-mm-dd',
+            labelMonthNext:"Mois suivant",
+            labelMonthPrev:"Mois précédent",
+            labelMonthSelect:"Sélectionner un mois",
+            labelYearSelect:"Sélectionner une année"
+        });
+
+        jQuery(function(){
+            $('.datepicker').pickadate({
+                selectMonths: true, // Creates a dropdown to control month
+                selectYears: 2, // Creates a dropdown of 15 years to control year,
+                close: 'Ok',
+                closeOnSelect: true // Close upon selecting a date,
+            });
+        });
+    </script>
+{% endblock %}
