@@ -306,7 +306,7 @@ SUM(IF(mode='4',amount,0)) as sum_4,
 SUM(IF(mode='5',amount,0)) as sum_5,
 SUM(IF(mode='6',amount,0)) as sum_6,
 SUM(amount) as grand_total
-FROM abstract_registration
+FROM ".$em->getClassMetadata('AppBundle:AbstractRegistration')->getTableName()."
 WHERE date >= :from ".(($to) ? "AND date <= :to" : "")."
 GROUP BY YEAR(date), MONTH(date), DAY(date)
 ORDER BY date DESC;");
@@ -331,7 +331,7 @@ SUM(IF(mode='4',amount,0)) as sum_4,
 SUM(IF(mode='5',amount,0)) as sum_5,
 SUM(IF(mode='6',amount,0)) as sum_6,
 SUM(amount) as grand_total
-FROM abstract_registration
+FROM ".$em->getClassMetadata('AppBundle:AbstractRegistration')->getTableName()."
 WHERE date >= :from ".(($to) ? "AND date <= :to" : "").";");
         $statement->bindValue('from', $from->format('Y-m-d'));
         if ($to){
