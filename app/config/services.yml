@@ -125,3 +125,9 @@ services:
             arguments:
                 $baseDomain: '%emails.base_domain%'
                 $sendableEmails: '%emails.sendable%'
+
+    period_service:
+            class: AppBundle\Service\PeriodService
+            public: true
+            arguments:
+                - "@doctrine.orm.entity_manager"

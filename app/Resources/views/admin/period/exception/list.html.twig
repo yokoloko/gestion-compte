@@ -8,26 +8,37 @@
 {% endblock %}
 
 {% block content %}
-    <h4 class="">Exeptions</h4>
+    <h4 class="">Exceptions</h4>
 
-    <ul>
-    {% for exception in exceptions %}
-        <li>{{ exception.date | date_fr_full }}</li>
-        {#<a href="{{ path("period_edit",{'id': period.id}) }}">#}
-            {#<div class="card-panel {% if period.job %}{{ period.job.color }}{% else %}blue{% endif %} lighten-2">#}
-                 {#<p class="white-text">#}
-                     {#{% if period.job %}<b class="white-text">{{ period.job.name }}</b>{% endif %}<br>#}
-                      {#{{ period.start | date('H:i') }}-{{ period.end | date('H:i') }}<br>#}
-                      {#{% for position in period.positions %}#}
-                          {#<i class="material-icons">person</i>{{ position }}#}
-                      {#{% endfor %}#}
-                  {#</p>#}
-            {#</div>#}
-        {#</a>#}
-    {% endfor %}
-    </ul>
+    <table class="responsive-table striped">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Date de début</th>
+            <th>Date de fin</th>
+            <th>Type</th>
+            <th>Périodicité</th>
+            <th>Raison</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+            {% for exception in exceptions %}
+                <tr>
+                    <td>{{ exception.id }}</td>
+                    <td>{{ exception.startDate | date_fr_full }}</td>
+                    <td>{{ exception.endDate | date_fr_full }}</td>
+                    <td>{{ exception.type }}</td>
+                    <td>{{ exception.recurrence }}</td>
+                    <td>{{ exception.reason.name }}</td>
+                    <td><a href="{{ path("period_exception_edit",{'id': exception.id}) }}">Modifier</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 
-    <h5>Nouvelle exception</h5>
+
+    <h4>Nouvelle exception</h4>
     {{ form_start(form) }}
     {{ form_widget(form) }}
     <div>
@@ -56,7 +67,22 @@
             labelYearSelect:"Sélectionner une année"
         });
 
-        jQuery(function(){
+        function typeUpdated(element) {
+            if (element.value === 'ADD') {
+                $('.add-only').show();
+                $('select.add-only').material_select();
+                $('select.add-only ').hide();
+            } else {
+                $('select.add-only').material_select('destroy');
+                $('.add-only').hide();
+            }
+        }
+
+        jQuery(function() {
+            // Hide by default add type specific exceptions
+            $('select.add-only').material_select('destroy');
+            $('.add-only').hide();
+
             $('.datepicker').pickadate({
                 selectMonths: true, // Creates a dropdown to control month
                 selectYears: 2, // Creates a dropdown of 15 years to control year,

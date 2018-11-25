@@ -36,6 +36,10 @@ class Job
      */
     private $color;
 
+    public function __toString()
+    {
+        return $this->name;
+    }
 
     /**
      * Get id

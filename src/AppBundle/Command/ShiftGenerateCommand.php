@@ -64,11 +64,16 @@ class ShiftGenerateCommand extends ContainerAwareCommand
                 ->orderBy('p.start');
             $periods = $qb->getQuery()->getResult();
             foreach ($periods as $period) {
+                $periodService = $this->getContainer()->get('period_service');
                 $shift = new Shift();
                 $start = date_create_from_format('Y-m-d H:i', $date->format('Y-m-d') . ' ' . $period->getStart()->format('H:i'));
                 $shift->setStart($start);
                 $end = date_create_from_format('Y-m-d H:i', $date->format('Y-m-d') . ' ' . $period->getEnd()->format('H:i'));
                 $shift->setEnd($end);
+
+                if ($periodService->isExcludedForDateInterval($start, $end)) {
+                    continue;
+                }
 
                 foreach ($period->getPositions() as $position) {
 

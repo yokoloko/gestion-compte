@@ -8,6 +8,7 @@ use AppBundle\Entity\PeriodException;
 use AppBundle\Entity\PeriodPosition;
 use AppBundle\Entity\Shift;
 use AppBundle\Entity\User;
+use AppBundle\Form\PeriodExceptionType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
@@ -23,7 +24,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Validator\Constraints\DateTime;
 
 /**
-* @Route("period/exception/")
+* @Route("period/exception")
 */
 class PeriodExceptionController extends Controller
 {
@@ -38,74 +39,80 @@ class PeriodExceptionController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $form = $this->createForm('AppBundle\Form\PeriodExceptionType',$exception);
+        $form = $this->createForm(PeriodExceptionType::class, $exception);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $time = $form->get('date')->getData();
-            $exception->setDate(new \DateTime($time));
             $em->persist($exception);
             $em->flush();
-            $session->getFlashBag()->add('success', 'La nouvelle exception a bien été créé !');
-            //return $this->redirectToRoute('exception_edit',array('id'=>$exception->getId()));
+            $session->getFlashBag()->add('success', 'La nouvelle exception a bien été créée !');
         }
 
-        $exceptions =  $em->getRepository('AppBundle:PeriodException')->findBy(array(),array('date'=>'ASC'));
+        $exceptions =  $em->getRepository('AppBundle:PeriodException')->findBy(array(), array('startDate' => 'ASC'));
 
 
-        return $this->render('admin/period/exception/list.html.twig',array(
-            "exceptions" => $exceptions,
-            "form" => $form->createView()
+        return $this->render('admin/period/exception/list.html.twig', array(
+            'exceptions' => $exceptions,
+            'form' => $form->createView()
         ));
     }
 
     /**
-     * @Route("/edit/{id}", name="period_edit")
+     * Deletes a period exception entity.
+     *
+     * @Route("/delete/{id}", name="period_exception_delete")
      * @Security("has_role('ROLE_ADMIN')")
-     * @Method({"GET", "POST"})
+     * @Method("DELETE")
      */
-    public function editAction(Request $request,Period $period)
+    public function deleteAction(Request $request, PeriodException $exception)
     {
         $session = new Session();
 
-        $form = $this->createForm('AppBundle\Form\PeriodType',$period);
+        $form = $this->createFormBuilder()
+            ->setAction($this->generateUrl('period_exception_delete', array('id' => $exception->getId())))
+            ->setMethod('DELETE')
+            ->getForm();
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
-            $time = $form->get('start')->getData();
-            $period->setStart(new \DateTime($time));
-            $time = $form->get('end')->getData();
-            $period->setEnd(new \DateTime($time));
-
             $em = $this->getDoctrine()->getManager();
-            $em->persist($period);
+            $em->remove($exception);
             $em->flush();
-            $session->getFlashBag()->add('success', 'Le créneau type a bien été édité !');
-            return $this->redirectToRoute('period');
+            $session->getFlashBag()->add('success', 'L\'exception a bien été supprimée !');
         }
 
-        $form->get('start')->setData($period->getStart()->format('H:i'));
-        $form->get('end')->setData($period->getEnd()->format('H:i'));
+        return $this->redirectToRoute('period_exception');
 
-        $delete_form = $this->createFormBuilder()
-            ->setAction($this->generateUrl('period_delete', array('id' => $period->getId())))
+    }
+
+    /**
+     * @Route("/edit/{id}", name="period_exception_edit")
+     * @Security("has_role('ROLE_ADMIN')")
+     * @Method({"GET", "POST"})
+     */
+    public function editAction(Request $request, PeriodException $exception)
+    {
+        $session = new Session();
+
+        $form = $this->createForm(PeriodExceptionType::class, $exception);
+        $form->handleRequest($request);
+
+        $deleteForm = $this->createFormBuilder()
+            ->setAction($this->generateUrl('period_exception_delete', array('id' => $exception->getId())))
             ->setMethod('DELETE')
             ->getForm();
 
-        $positions_delete_form = array();
-        foreach($period->getPositions() as $position){
-            $positions_delete_form[$position->getId()] = $this->createFormBuilder()
-                ->setAction($this->generateUrl('remove_position_from_period', array('period' => $period->getId(),'position' => $position->getId())))
-                ->setMethod('DELETE')
-                ->getForm()->createView();
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($exception);
+            $em->flush();
+            $session->getFlashBag()->add('success', 'L\'exception a bien été éditée !');
+            return $this->redirectToRoute('period_exception');
         }
 
-        return $this->render('admin/period/edit.html.twig',array(
+        return $this->render('admin/period/exception/edit.html.twig', array(
             "form" => $form->createView(),
-            "period" => $period,
-            "position_form" => $this->createForm('AppBundle\Form\PeriodPositionType',new PeriodPosition(),array('action'=>$this->generateUrl('add_position_to_period',array('id'=>$period->getId()))))->createView(),
-            "delete_form" => $delete_form->createView(),
-            "positions_delete_form" => $positions_delete_form
+            'delete_form' => $deleteForm->createView(),
+            "exception" => $exception
         ));
     }
     
