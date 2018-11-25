@@ -18,9 +18,10 @@
 
     {{ form_start(delete_form) }}
     {{ form_start(form) }}
-    {{ form_widget(form.type) }}
-    {{ form_widget(form.recurrence) }}
-    {{ form_widget(form.job) }}
+    {{ form_row(form.type) }}
+    {{ form_row(form.recurrence) }}
+    {{ form_row(form.job) }}
+    {{ form_row(form.formation) }}
 
     <div class="row">
         <div class="col s6">

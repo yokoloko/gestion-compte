@@ -2,6 +2,7 @@
 
 namespace AppBundle\Form;
 
+use AppBundle\Entity\Formation;
 use AppBundle\Entity\Job;
 use AppBundle\Entity\PeriodException;
 use AppBundle\Entity\PeriodExceptionReason;
@@ -61,17 +62,30 @@ class PeriodExceptionType extends AbstractType
                 ),
                 'required' => false,
             ))
+            ->add('formation', EntityType::class, array(
+                'label' => 'Formation',
+                'class' => Formation::class,
+                'label_attr' => array(
+                    'class' => 'add-only'
+                ),
+                'attr' => array(
+                    'class' => 'add-only'
+                ),
+                'required' => false,
+            ))
             ->add('startDate', DateTimeType::class, array(
                 'label' => 'Début',
                 'input'  => 'datetime',
                 'date_widget' => 'single_text',
                 'time_widget' => 'single_text',
+                'data' => new \DateTime('00:00')
             ))
             ->add('endDate', DateTimeType::class, array(
                 'label' => 'Fin',
                 'input'  => 'datetime',
                 'date_widget' => 'single_text',
                 'time_widget' => 'single_text',
+                'data' => new \DateTime('23:59:59')
             ))
             ->add('reason', EntityType::class, array(
                 'label' => 'Raison',
