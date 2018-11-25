@@ -63,15 +63,15 @@ class PeriodExceptionType extends AbstractType
             ))
             ->add('startDate', DateTimeType::class, array(
                 'label' => 'Début',
-                'widget' => 'single_text',
-                'html5' => false,
-                'attr' => array('class' => 'datepicker')
+                'input'  => 'datetime',
+                'date_widget' => 'single_text',
+                'time_widget' => 'single_text',
             ))
             ->add('endDate', DateTimeType::class, array(
                 'label' => 'Fin',
-                'widget' => 'single_text',
-                'html5' => false,
-                'attr' => array('class' => 'datepicker')
+                'input'  => 'datetime',
+                'date_widget' => 'single_text',
+                'time_widget' => 'single_text',
             ))
             ->add('reason', EntityType::class, array(
                 'label' => 'Raison',
@@ -85,7 +85,6 @@ class PeriodExceptionType extends AbstractType
                 if (!$exception->getEndDate()) {
                     $exception->setEndDate($exception->getStartDate());
                 }
-                $exception->getEndDate()->setTime(23, 59, 59);
             }
         });
     }

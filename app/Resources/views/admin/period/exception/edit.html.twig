@@ -17,7 +17,35 @@
     {{ form_end(form) }}
 
     {{ form_start(delete_form) }}
-    {{ form_widget(delete_form) }}
+    {{ form_start(form) }}
+    {{ form_widget(form.type) }}
+    {{ form_widget(form.recurrence) }}
+    {{ form_widget(form.job) }}
+
+    <div class="row">
+        <div class="col s6">
+            <div class="errors">
+                {{ form_errors(form.startDate) }}
+            </div>
+            <div class="input-field">
+                {{ form_label(form.startDate) }}
+                {{ form_widget(form.startDate.date, {'attr': {'class': 'datepicker'}}) }}
+                {{ form_widget(form.startDate.time, {'attr': {'class': 'timepicker'}}) }}
+            </div>
+        </div>
+        <div class="col s6">
+            <div class="errors">
+                {{ form_errors(form.endDate) }}
+            </div>
+            <div class="input-field">
+                {{ form_label(form.endDate) }}
+                {{ form_widget(form.endDate.date, {'attr': {'class': 'datepicker'}}) }}
+                {{ form_widget(form.endDate.time, {'attr': {'class': 'timepicker'}}) }}
+            </div>
+        </div>
+    </div>
+
+    {{ form_rest(form) }}
     <div>
         <button type="submit" class="btn waves-effect waves-light red">Supprimer</button>
     </div>
@@ -26,18 +54,6 @@
 
 {% block javascripts %}
     <script>
-        $('.timepicker').pickatime({
-            default: 'now', // Set default time: 'now', '1:30AM', '16:30'
-            fromnow: 0,       // set default time to * milliseconds from now (using with default = 'now')
-            twelvehour: false, // Use AM/PM or 24-hour format
-            donetext: 'OK', // text for done-button
-            cleartext: 'Effacer', // text for clear-button
-            canceltext: 'Annuler', // Text for cancel-button
-            autoclose: true, // automatic close timepicker
-            ampmclickable: true, // make AM PM clickable
-            aftershow: function(){} //Function for after opening timepicker
-        });
-
         function typeUpdated(element) {
             if (element.value === 'ADD') {
                 $('.add-only').show();
@@ -53,6 +69,22 @@
             // Hide by default add type specific exceptions
             $('select.add-only').material_select('destroy');
             $('.add-only').hide();
+
+            $('.datepicker').pickadate({
+                selectMonths: true, // Creates a dropdown to control month
+                selectYears: 2, // Creates a dropdown of 15 years to control year,
+                close: 'Ok',
+                closeOnSelect: true // Close upon selecting a date,
+            });
+
+            $('.timepicker').pickatime({
+                twelvehour: false, // Use AM/PM or 24-hour format
+                donetext: 'OK', // text for done-button
+                cleartext: 'Effacer', // text for clear-button
+                canceltext: 'Fermer', // Text for cancel-button
+                autoclose: true, // automatic close timepicker
+                ampmclickable: false, // make AM PM clickable
+            });
         });
     </script>
 {% endblock %}

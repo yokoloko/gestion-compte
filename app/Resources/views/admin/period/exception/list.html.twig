@@ -26,8 +26,8 @@
             {% for exception in exceptions %}
                 <tr>
                     <td>{{ exception.id }}</td>
-                    <td>{{ exception.startDate | date_fr_full }}</td>
-                    <td>{{ exception.endDate | date_fr_full }}</td>
+                    <td>{{ exception.startDate | date('d/m/Y H:i') }}</td>
+                    <td>{{ exception.endDate | date('d/m/Y H:i') }}</td>
                     <td>{{ exception.type }}</td>
                     <td>{{ exception.recurrence }}</td>
                     <td>{{ exception.reason.name }}</td>
@@ -40,7 +40,34 @@
 
     <h4>Nouvelle exception</h4>
     {{ form_start(form) }}
-    {{ form_widget(form) }}
+    {{ form_widget(form.type) }}
+    {{ form_widget(form.recurrence) }}
+    {{ form_widget(form.job) }}
+
+    <div class="row">
+        <div class="col s6">
+            <div class="errors">
+                {{ form_errors(form.startDate) }}
+            </div>
+            <div class="input-field">
+                {{ form_label(form.startDate) }}
+                {{ form_widget(form.startDate.date, {'attr': {'class': 'datepicker'}}) }}
+                {{ form_widget(form.startDate.time, {'attr': {'class': 'timepicker'}}) }}
+            </div>
+        </div>
+        <div class="col s6">
+            <div class="errors">
+                {{ form_errors(form.endDate) }}
+            </div>
+            <div class="input-field">
+                {{ form_label(form.endDate) }}
+                {{ form_widget(form.endDate.date, {'attr': {'class': 'datepicker'}}) }}
+                {{ form_widget(form.endDate.time, {'attr': {'class': 'timepicker'}}) }}
+            </div>
+        </div>
+    </div>
+
+    {{ form_rest(form) }}
     <div>
         <button type="submit" class="btn-large waves-effect waves-light">Créer</button>
     </div>
@@ -50,23 +77,6 @@
 {% endblock %}
 {% block javascripts %}
     <script>
-        jQuery.extend( jQuery.fn.pickadate.defaults, {
-            monthsFull: [ 'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre' ],
-            monthsShort: [ 'Jan', 'Fev', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Aou', 'Sep', 'Oct', 'Nov', 'Dec' ],
-            weekdaysFull: [ 'Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi' ],
-            weekdaysShort: [ 'Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam' ],
-            today: 'Aujourd\'hui',
-            clear: 'Effacer',
-            close: 'Fermer',
-            firstDay: 1,
-            format: 'yyyy-mm-dd',
-            formatSubmit: 'yyyy-mm-dd',
-            labelMonthNext:"Mois suivant",
-            labelMonthPrev:"Mois précédent",
-            labelMonthSelect:"Sélectionner un mois",
-            labelYearSelect:"Sélectionner une année"
-        });
-
         function typeUpdated(element) {
             if (element.value === 'ADD') {
                 $('.add-only').show();
@@ -88,6 +98,15 @@
                 selectYears: 2, // Creates a dropdown of 15 years to control year,
                 close: 'Ok',
                 closeOnSelect: true // Close upon selecting a date,
+            });
+
+            $('.timepicker').pickatime({
+                twelvehour: false, // Use AM/PM or 24-hour format
+                donetext: 'OK', // text for done-button
+                cleartext: 'Effacer', // text for clear-button
+                canceltext: 'Fermer', // Text for cancel-button
+                autoclose: true, // automatic close timepicker
+                ampmclickable: false, // make AM PM clickable
             });
         });
     </script>
