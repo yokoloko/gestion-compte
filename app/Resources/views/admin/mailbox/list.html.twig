@@ -14,6 +14,7 @@
         <tr>
             <th>Nom</th>
             <th>Adresse</th>
+            <th>Emails</th>
             <th>Editer</th>
         </tr>
         </thead>
@@ -23,6 +24,7 @@
             <tr>
                 <td>{{ mailbox.fromName }}</td>
                 <td>{{ mailbox.address }}</td>
+                <td><a href="{{ path("mailbox_inbox",{'id':mailbox.id}) }}">emails</a></td>
                 <td><a href="{{ path("mailbox_edit",{'id':mailbox.id}) }}">editer</a></td>
             </tr>
         {% endfor %}

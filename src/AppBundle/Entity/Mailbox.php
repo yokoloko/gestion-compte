@@ -37,6 +37,12 @@ class Mailbox
     protected $address;
 
     /**
+     * A Mailbox can have one ImapConfig
+     * @ORM\OneToOne(targetEntity="ImapConfig", mappedBy="mailbox")
+     */
+    private $imapConfig;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -83,6 +89,22 @@ class Mailbox
     public function setAddress(string $address)
     {
         $this->address = $address;
+    }
+
+    /**
+     * @return ImapConfig mixed
+     */
+    public function getImapConfig()
+    {
+        return $this->imapConfig;
+    }
+
+    /**
+     * @param mixed $imapConfig
+     */
+    public function setImapConfig(ImapConfig $imapConfig): void
+    {
+        $this->imapConfig = $imapConfig;
     }
 
 

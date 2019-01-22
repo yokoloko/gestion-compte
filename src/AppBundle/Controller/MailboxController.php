@@ -10,6 +10,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use PhpImap\Mailbox as ImapMailbox;
 
 /**
  * Mailbox controller.
@@ -64,6 +65,29 @@ class MailboxController extends Controller
             'mailbox' => $mailbox,
             'form' => $form->createView(),
         ));
+    }
+
+    /**
+     * Mailbox emails
+     *
+     * @Route("/{id}", name="mailbox_inbox")
+     * @Method("GET")
+     * @Security("has_role('ROLE_ADMIN')")
+     */
+    public function inboxAction(Request $request, Mailbox $mailbox)
+    {
+        $config = $mailbox->getImapConfig();
+        if ($config) {
+            $imap = new ImapMailbox($config->getPath(), $config->getLogin(), $config->getPassword(), '/home/deshayeb/Téléchargements');
+            $mailsIds = $imap->searchMailbox('ALL');
+            $mails = array();
+            foreach ($mailsIds as $mailId) {
+                $mails[] = $imap->getMail($mailId);
+            }
+            return $this->render('admin/mailbox/emails.html.twig', array('mailbox' => $mailbox, 'mails' => $mails));
+        } else {
+
+        }
     }
 
     /**

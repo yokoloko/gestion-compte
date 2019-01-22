@@ -28,6 +28,7 @@
         "liip/imagine-bundle": "^1.9",
         "michelf/php-markdown": "^1.7",
         "ornicar/gravatar-bundle": "^1.1",
+        "php-imap/php-imap": "^3.0",
         "sensio/distribution-bundle": "^5.0.19",
         "sensio/framework-extra-bundle": "^3.0.2",
         "spipu/html2pdf": "^5.2",
