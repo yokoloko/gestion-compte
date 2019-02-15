@@ -43,6 +43,12 @@ class CodeBox
     private $codes;
 
     /**
+     * @ORM\OneToMany(targetEntity="ReceivedSms", mappedBy="author",cascade={"persist", "remove"})
+     * @OrderBy({"created_at" = "DESC"})
+     */
+    private $sms;
+
+    /**
      * Get id.
      *
      * @return int
@@ -114,5 +120,75 @@ class CodeBox
     public function setCodes($codes): void
     {
         $this->codes = $codes;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->codes = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->sms = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add code.
+     *
+     * @param \AppBundle\Entity\Code $code
+     *
+     * @return CodeBox
+     */
+    public function addCode(\AppBundle\Entity\Code $code)
+    {
+        $this->codes[] = $code;
+
+        return $this;
+    }
+
+    /**
+     * Remove code.
+     *
+     * @param \AppBundle\Entity\Code $code
+     *
+     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     */
+    public function removeCode(\AppBundle\Entity\Code $code)
+    {
+        return $this->codes->removeElement($code);
+    }
+
+    /**
+     * Add sm.
+     *
+     * @param \AppBundle\Entity\ReceivedSms $sm
+     *
+     * @return CodeBox
+     */
+    public function addSm(\AppBundle\Entity\ReceivedSms $sm)
+    {
+        $this->sms[] = $sm;
+
+        return $this;
+    }
+
+    /**
+     * Remove sm.
+     *
+     * @param \AppBundle\Entity\ReceivedSms $sm
+     *
+     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     */
+    public function removeSm(\AppBundle\Entity\ReceivedSms $sm)
+    {
+        return $this->sms->removeElement($sm);
+    }
+
+    /**
+     * Get sms.
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getSms()
+    {
+        return $this->sms;
     }
 }

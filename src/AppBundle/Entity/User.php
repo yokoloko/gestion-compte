@@ -56,6 +56,12 @@ class User extends BaseUser
      */
     private $annotations;
 
+    /**
+     * @ORM\OneToMany(targetEntity="ReceivedSms", mappedBy="author",cascade={"persist", "remove"})
+     * @OrderBy({"created_at" = "DESC"})
+     */
+    private $sms;
+
     public function getGroups()
     {
         if ($this->getBeneficiary()){
@@ -320,5 +326,41 @@ class User extends BaseUser
     public function setBeneficiary($beneficiary)
     {
         $this->beneficiary = $beneficiary;
+    }
+
+    /**
+     * Add sm.
+     *
+     * @param \AppBundle\Entity\ReceivedSms $sm
+     *
+     * @return User
+     */
+    public function addSm(\AppBundle\Entity\ReceivedSms $sm)
+    {
+        $this->sms[] = $sm;
+
+        return $this;
+    }
+
+    /**
+     * Remove sm.
+     *
+     * @param \AppBundle\Entity\ReceivedSms $sm
+     *
+     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     */
+    public function removeSm(\AppBundle\Entity\ReceivedSms $sm)
+    {
+        return $this->sms->removeElement($sm);
+    }
+
+    /**
+     * Get sms.
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getSms()
+    {
+        return $this->sms;
     }
 }
