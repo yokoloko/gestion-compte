@@ -27,6 +27,8 @@ final class Version20190215083346_code_boxes extends AbstractMigration
         $this->addSql('ALTER TABLE received_sms ADD CONSTRAINT FK_16127592BE7A8EEF FOREIGN KEY (codebox_id) REFERENCES code_box (id)');
         $this->addSql('ALTER TABLE code_box_access_for_shifter ADD CONSTRAINT FK_D5F93B93A791239D FOREIGN KEY (code_box_id) REFERENCES code_box (id)');
         $this->addSql('INSERT INTO code_box_access_for_shifter (before_delay, after_delay, can_generate, slug, code_box_id) VALUES (15, 60, true, "CODE", 1)');
+        $this->addSql('CREATE TABLE code_box_access_by_code (id INT AUTO_INCREMENT NOT NULL, code_box_id INT DEFAULT NULL, name VARCHAR(255) NOT NULL, code VARCHAR(55) NOT NULL, INDEX IDX_8C52AAEFA791239D (code_box_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET UTF8 COLLATE UTF8_unicode_ci ENGINE = InnoDB');
+        $this->addSql('ALTER TABLE code_box_access_by_code ADD CONSTRAINT FK_8C52AAEFA791239D FOREIGN KEY (code_box_id) REFERENCES code_box (id) ON DELETE CASCADE');
     }
 
     public function down(Schema $schema) : void
@@ -40,5 +42,6 @@ final class Version20190215083346_code_boxes extends AbstractMigration
         $this->addSql('ALTER TABLE code DROP code_box_id');
         $this->addSql('DROP TABLE received_sms');
         $this->addSql('DROP TABLE code_box_access_for_shifter');
+        $this->addSql('DROP TABLE code_box_access_by_code');
     }
 }

@@ -54,6 +54,11 @@ class CodeBox
     private $accessForShifter;
 
     /**
+     * @ORM\OneToMany(targetEntity="CodeBoxAccessByCode", mappedBy="codeBox")
+     */
+    private $accessesByCode;
+
+    /**
      * Get id.
      *
      * @return int
@@ -126,6 +131,7 @@ class CodeBox
     {
         $this->codes = $codes;
     }
+
     /**
      * Constructor
      */
@@ -211,5 +217,21 @@ class CodeBox
     public function setAccessForShifter($accessForShifter): void
     {
         $this->accessForShifter = $accessForShifter;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAccessesByCode()
+    {
+        return $this->accessesByCode;
+    }
+
+    /**
+     * @param mixed $accessesByCode
+     */
+    public function setAccessesByCode($accessesByCode): void
+    {
+        $this->accessesByCode = $accessesByCode;
     }
 }
