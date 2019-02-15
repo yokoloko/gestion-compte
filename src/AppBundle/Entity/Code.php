@@ -49,6 +49,18 @@ class Code
      */
     private $registrar;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="CodeBox")
+     * @ORM\JoinColumn(name="code_box_id", referencedColumnName="id", onDelete="CASCADE")
+     */
+    private $codeBox;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+    }
 
     /**
      * Get id
@@ -110,16 +122,6 @@ class Code
         return $this->createdAt;
     }
 
-
-
-
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-    }
-
     /**
      * Set registrar
      *
@@ -166,5 +168,21 @@ class Code
     public function getClosed()
     {
         return $this->closed;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCodeBox()
+    {
+        return $this->codeBox;
+    }
+
+    /**
+     * @param mixed $codeBox
+     */
+    public function setCodeBox($codeBox): void
+    {
+        $this->codeBox = $codeBox;
     }
 }
