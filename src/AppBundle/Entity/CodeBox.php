@@ -4,6 +4,7 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\OrderBy;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * CodeBox
@@ -26,6 +27,7 @@ class CodeBox
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=55, unique=true)
+     * @Assert\NotBlank()
      */
     private $name;
 
