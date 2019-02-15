@@ -49,6 +49,11 @@ class CodeBox
     private $sms;
 
     /**
+     * @ORM\OneToOne(targetEntity="CodeBoxAccessForShifter", mappedBy="codeBox")
+     */
+    private $accessForShifter;
+
+    /**
      * Get id.
      *
      * @return int
@@ -190,5 +195,21 @@ class CodeBox
     public function getSms()
     {
         return $this->sms;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAccessForShifter()
+    {
+        return $this->accessForShifter;
+    }
+
+    /**
+     * @param mixed $accessForShifter
+     */
+    public function setAccessForShifter($accessForShifter): void
+    {
+        $this->accessForShifter = $accessForShifter;
     }
 }
