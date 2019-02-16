@@ -3,6 +3,8 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\CodeBox;
+use AppBundle\Entity\CodeBoxAccessByCode;
+use AppBundle\Form\CodeBoxAccessByCodeType;
 use AppBundle\Form\CodeBoxType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -105,5 +107,69 @@ class CodeBoxController extends Controller
             'codeBox' => $codeBox
         ));
 
+    }
+
+    /**
+     * @Route("/access/{id}", name="code_box_access_list", methods={"GET"})
+     * @param Request $request
+     * @param CodeBox $codeBox
+     * @return Response
+     */
+    public function listAccessAction(Request $request, CodeBox $codeBox)
+    {
+
+        return $this->render('admin/code_box/access/list.html.twig', array(
+            'codeBox' => $codeBox,
+            'accesses' => $codeBox->getAccessesByCode()
+        ));
+    }
+
+    /**
+     * @Route("/access/{id}/new", name="code_box_access_new", methods={"GET", "POST"})
+     * @Security("has_role('ROLE_SUPER_ADMIN')")
+     * @param Request $request
+     * @param CodeBox $codeBox
+     * @return Response
+     */
+    public function newAccessAction(Request $request, CodeBox $codeBox)
+    {
+        $session = $this->get('session');
+
+        $access = new CodeBoxAccessByCode();
+        $access->setCodeBox($codeBox);
+        $form = $this->createForm(CodeBoxAccessByCodeType::class, $access);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($access);
+            $em->flush();
+
+            $session->getFlashBag()->add('success', 'L\'accès a bien été créé !');
+            return $this->redirectToRoute('code_box_access_list', ['id' => $codeBox->getId()]);
+        }
+
+        return $this->render('admin/code_box/access/new.html.twig', array(
+            'form' => $form->createView(),
+            'codeBox' => $codeBox
+        ));
+    }
+
+    /**
+     * @Route("/access/delete/{id}", name="code_box_access_delete", methods={"GET"})
+     * @Security("has_role('ROLE_SUPER_ADMIN')")
+     * @param Request $request
+     * @return Response
+     */
+    public function deleteAccessAction(Request $request, CodeBoxAccessByCode $accessByCode)
+    {
+        $session = $this->get('session');
+
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($accessByCode);
+        $em->flush();
+
+        $session->getFlashBag()->add('success', 'L\'accès a bien été supprimé !');
+        return $this->redirectToRoute('code_box_list');
     }
 }

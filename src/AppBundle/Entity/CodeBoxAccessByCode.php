@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * CodeBoxAccessByCode
@@ -25,6 +26,7 @@ class CodeBoxAccessByCode
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=255)
+     * @Assert\NotBlank()
      */
     private $name;
 
@@ -32,12 +34,14 @@ class CodeBoxAccessByCode
      * @var string
      *
      * @ORM\Column(name="code", type="string", length=55)
+     * @Assert\NotBlank()
      */
     private $code;
 
     /**
      * @ORM\ManyToOne(targetEntity="CodeBox", inversedBy="accessesByCode")
      * @ORM\JoinColumn(name="code_box_id", referencedColumnName="id", onDelete="CASCADE")
+     * @Assert\NotNull()
      */
     private $codeBox;
 

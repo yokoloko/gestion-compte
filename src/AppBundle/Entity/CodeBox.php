@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\OrderBy;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -41,23 +42,27 @@ class CodeBox
     private $description;
 
     /**
+     * @var Collection
      * @ORM\OneToMany(targetEntity="Code", mappedBy="codeBox")
      * @OrderBy({"createdAt" = "DESC"})
      */
     private $codes;
 
     /**
+     * @var Collection
      * @ORM\OneToMany(targetEntity="ReceivedSms", mappedBy="code_box",cascade={"persist", "remove"})
      * @OrderBy({"created_at" = "DESC"})
      */
     private $sms;
 
     /**
+     * @var CodeBoxAccessForShifter
      * @ORM\OneToOne(targetEntity="CodeBoxAccessForShifter", mappedBy="codeBox")
      */
     private $accessForShifter;
 
     /**
+     * @var Collection
      * @ORM\OneToMany(targetEntity="CodeBoxAccessByCode", mappedBy="codeBox")
      */
     private $accessesByCode;
@@ -121,7 +126,7 @@ class CodeBox
     }
 
     /**
-     * @return mixed
+     * @return Collection
      */
     public function getCodes()
     {
@@ -129,7 +134,7 @@ class CodeBox
     }
 
     /**
-     * @param mixed $codes
+     * @param Collection $codes
      */
     public function setCodes($codes): void
     {
@@ -200,7 +205,7 @@ class CodeBox
     /**
      * Get sms.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getSms()
     {
@@ -224,17 +229,17 @@ class CodeBox
     }
 
     /**
-     * @return CodeBoxAccessByCode
+     * @return Collection|CodeBoxAccessByCode[]
      */
-    public function getAccessesByCode() : ?CodeBoxAccessByCode
+    public function getAccessesByCode() : ?Collection
     {
         return $this->accessesByCode;
     }
 
     /**
-     * @param CodeBoxAccessByCode $accessesByCode
+     * @param Collection $accessesByCode
      */
-    public function setAccessesByCode(?CodeBoxAccessByCode $accessesByCode): void
+    public function setAccessesByCode(?Collection $accessesByCode): void
     {
         $this->accessesByCode = $accessesByCode;
     }

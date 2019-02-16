@@ -30,13 +30,14 @@
                         <div class="left">
                             <a href="{{ path("code_new", {'id': codeBox.id}) }}"><i class="material-icons left">autorenew</i>Générer</a>
                         </div>
+                        <div class="left">
+                            <a href="{{ path("code_box_access_list", {'id': codeBox.id}) }}"><i class="material-icons left">vpn_key</i>Gérer accès ({{ codeBox.accessesByCode | length }})</a>
+                        </div>
                     </div>
                 </div>
             </div>
         {% endfor %}
     </div>
 
-    {% if is_granted("ROLE_SUPER_ADMIN") %}
-        <a href="{{ path('code_box_new') }}" class="btn"><i class="material-icons left">add</i>Ajouter un boitier à clé</a>
-    {% endif %}
+    <a href="{{ path('code_box_new') }}" class="btn"><i class="material-icons left">add</i>Ajouter un boitier à clé</a>
 {% endblock %}
