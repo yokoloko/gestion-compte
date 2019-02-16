@@ -25,6 +25,7 @@ class CodeBoxAccessForShifter
     /**
      * @var int
      *
+     * @Assert\NotNull()
      * @ORM\Column(name="before_delay", type="integer")
      */
     private $beforeDelay;
@@ -32,6 +33,7 @@ class CodeBoxAccessForShifter
     /**
      * @var int
      *
+     * @Assert\NotNull()
      * @ORM\Column(name="after_delay", type="integer")
      */
     private $afterDelay;
@@ -46,6 +48,7 @@ class CodeBoxAccessForShifter
     /**
      * @var string
      *
+     * @Assert\NotBlank()
      * @ORM\Column(name="slug", type="string", length=55)
      */
     private $slug;
@@ -124,7 +127,7 @@ class CodeBoxAccessForShifter
      *
      * @return CodeBoxAccessForShifter
      */
-    public function setGenerate($canGenerate)
+    public function setCanGenerate($canGenerate)
     {
         $this->canGenerate = $canGenerate;
 
@@ -136,7 +139,7 @@ class CodeBoxAccessForShifter
      *
      * @return bool
      */
-    public function canGenerate()
+    public function getCanGenerate()
     {
         return $this->canGenerate;
     }

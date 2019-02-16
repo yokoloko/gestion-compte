@@ -95,7 +95,7 @@ class CodeVoter extends Voter
         $now = new \DateTime('now');
         if ($this->canView($code, $user)) { //can add only if last code can be seen
             $shifterAccess = $code->getCodeBox()->getAccessForShifter();
-            if (!$shifterAccess || !$shifterAccess->canGenerate()) {
+            if (!$shifterAccess || !$shifterAccess->getCanGenerate()) {
                 return false;
             }
             if ($code->getRegistrar() != $user || $code->getCreatedAt()->format('Y m d')!=($now->format('Y m d'))) { // on ne change pas son propre code

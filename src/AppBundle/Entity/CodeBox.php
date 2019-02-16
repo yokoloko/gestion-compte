@@ -57,6 +57,7 @@ class CodeBox
 
     /**
      * @var CodeBoxAccessForShifter
+     * @Assert\Valid()
      * @ORM\OneToOne(targetEntity="CodeBoxAccessForShifter", mappedBy="codeBox")
      */
     private $accessForShifter;
