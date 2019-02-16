@@ -47,7 +47,7 @@ class CodeBox
     private $codes;
 
     /**
-     * @ORM\OneToMany(targetEntity="ReceivedSms", mappedBy="author",cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="ReceivedSms", mappedBy="code_box",cascade={"persist", "remove"})
      * @OrderBy({"created_at" = "DESC"})
      */
     private $sms;
@@ -174,13 +174,13 @@ class CodeBox
     /**
      * Add sm.
      *
-     * @param \AppBundle\Entity\ReceivedSms $sm
+     * @param \AppBundle\Entity\ReceivedSms $sms
      *
      * @return CodeBox
      */
-    public function addSm(\AppBundle\Entity\ReceivedSms $sm)
+    public function addSms(\AppBundle\Entity\ReceivedSms $sms)
     {
-        $this->sms[] = $sm;
+        $this->sms[] = $sms;
 
         return $this;
     }
@@ -188,13 +188,13 @@ class CodeBox
     /**
      * Remove sm.
      *
-     * @param \AppBundle\Entity\ReceivedSms $sm
+     * @param \AppBundle\Entity\ReceivedSms $sms
      *
      * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
      */
-    public function removeSm(\AppBundle\Entity\ReceivedSms $sm)
+    public function removeSms(\AppBundle\Entity\ReceivedSms $sms)
     {
-        return $this->sms->removeElement($sm);
+        return $this->sms->removeElement($sms);
     }
 
     /**

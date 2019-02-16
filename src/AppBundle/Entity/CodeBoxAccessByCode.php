@@ -36,7 +36,7 @@ class CodeBoxAccessByCode
     private $code;
 
     /**
-     * @ORM\ManyToOne(targetEntity="CodeBox")
+     * @ORM\ManyToOne(targetEntity="CodeBox", inversedBy="accessesByCode")
      * @ORM\JoinColumn(name="code_box_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $codeBox;

@@ -50,7 +50,7 @@ class Code
     private $registrar;
 
     /**
-     * @ORM\ManyToOne(targetEntity="CodeBox")
+     * @ORM\ManyToOne(targetEntity="CodeBox", inversedBy="codes")
      * @ORM\JoinColumn(name="code_box_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $codeBox;
