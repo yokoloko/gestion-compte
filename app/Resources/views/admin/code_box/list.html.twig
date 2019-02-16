@@ -14,7 +14,11 @@
                 <div class="card blue-grey darken-2 small">
                     <div class="card-content white-text">
                         <span class="card-title">{{ codeBox.name }} <i class="material-icons left">vpn_key</i></span>
-                        {{ codeBox.description }}
+                        <p>{{ codeBox.description }}</p>
+                        {% set currentCode = codeBox | latestCode %}
+                        {% if currentCode is not null %}
+                            <p>Code actuel : {{ currentCode.value }}</p>
+                        {% endif %}
                     </div>
                     <div class="card-action">
                         <a href="{{ path("code_box_edit", {'id': codeBox.id}) }}"><i class="material-icons left">edit</i></a>
