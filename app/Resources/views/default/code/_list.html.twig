@@ -28,17 +28,22 @@
             {% for code in codes %}
                 {% if is_granted("view",code)  %}
                     <tr>
-                        <td>{% if code.closed %}<del>{% endif %}
-                                <b>{{ code.value }}</b>
-                                {% if code.closed %}</del>{% endif %}
+                        <td>
+                            {% if code.closed %}<del>{% endif %}
+                            <b>{{ code.value }}</b>
+                            {% if code.closed %}</del>{% endif %}
                         </td>
-                        <td>{{ code.codeBox.name }}</td>
-                        <td>{% if code.closed %}<del>{% endif %}
-                                à {{ code.createdAt | date('H:m:i') }} le {{ code.createdAt | date_fr_long }}
-                        </td>{% if code.closed %}</del>{% endif %}
-                        <td>{% if code.closed %}<del>{% endif %}
+                        <td><a href="{{ path('code_box_list') }}">{{ code.codeBox.name }}</a></td>
+                        <td>
+                            {% if code.closed %}<del>{% endif %}
+                            à {{ code.createdAt | date('H:m:i') }} le {{ code.createdAt | date_fr_long }}
+                            {% if code.closed %}</del>{% endif %}
+                        </td>
+                        <td>
+                            {% if code.closed %}<del>{% endif %}
                                 {{ code.getRegistrar }}
-                        </td>{% if code.closed %}</del>{% endif %}
+                            {% if code.closed %}</del>{% endif %}
+                        </td>
                         <td>
                             {% if code.closed %}
                                 inactif
