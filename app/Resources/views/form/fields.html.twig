@@ -8,3 +8,11 @@
         {{ form_widget(form) }}
     </div>
 {%- endblock form_row -%}
+
+{% block checkbox_row -%}
+    <div>
+        {{- form_widget(form) -}}
+        {{- form_label(form) -}}
+        {{- form_errors(form) -}}
+    </div>
+{%- endblock checkbox_row %}
