@@ -21,7 +21,7 @@ class CodeBoxController extends Controller
 {
     /**
      * @Route("/", name="code_box_list", methods={"GET"})
-     * @Security("has_role('ROLE_SUPER_ADMIN')")
+     * @Security("has_role('ROLE_ADMIN')")
      * @param Request $request
      * @return Response
      */
@@ -37,7 +37,7 @@ class CodeBoxController extends Controller
 
     /**
      * @Route("/new", name="code_box_new", methods={"GET", "POST"})
-     * @Security("has_role('ROLE_SUPER_ADMIN')")
+     * @Security("has_role('ROLE_ADMIN')")
      * @param Request $request
      * @return Response
      */
@@ -64,7 +64,7 @@ class CodeBoxController extends Controller
 
     /**
      * @Route("/delete/{id}", name="code_box_delete", methods={"GET"})
-     * @Security("has_role('ROLE_SUPER_ADMIN')")
+     * @Security("has_role('ROLE_ADMIN')")
      * @param Request $request
      * @return Response
      */
@@ -82,7 +82,7 @@ class CodeBoxController extends Controller
 
     /**
      * @Route("/edit/{id}", name="code_box_edit", methods={"GET", "POST"})
-     * @Security("has_role('ROLE_SUPER_ADMIN')")
+     * @Security("has_role('ROLE_ADMIN')")
      * @param Request $request
      * @param CodeBox $codeBox
      * @return Response
@@ -126,7 +126,7 @@ class CodeBoxController extends Controller
 
     /**
      * @Route("/access/{id}/new", name="code_box_access_new", methods={"GET", "POST"})
-     * @Security("has_role('ROLE_SUPER_ADMIN')")
+     * @Security("has_role('ROLE_ADMIN')")
      * @param Request $request
      * @param CodeBox $codeBox
      * @return Response
@@ -157,7 +157,7 @@ class CodeBoxController extends Controller
 
     /**
      * @Route("/access/delete/{id}", name="code_box_access_delete", methods={"GET"})
-     * @Security("has_role('ROLE_SUPER_ADMIN')")
+     * @Security("has_role('ROLE_ADMIN')")
      * @param Request $request
      * @return Response
      */

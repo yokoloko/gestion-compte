@@ -34,7 +34,7 @@
                             {% if code.closed %}</del>{% endif %}
                         </td>
                         <td>
-                            {% if is_granted("ROLE_SUPER_ADMIN") %}
+                            {% if is_granted("ROLE_ADMIN") %}
                                 <a href="{{ path('code_box_list') }}">{{ code.codeBox.name }}</a>
                             {% else %}
                                 {{ code.codeBox.name }}
@@ -47,7 +47,7 @@
                         </td>
                         <td>
                             {% if code.closed %}<del>{% endif %}
-                                {{ code.getRegistrar }}
+                            {{ code.getRegistrar }}
                             {% if code.closed %}</del>{% endif %}
                         </td>
                         <td>
@@ -60,16 +60,28 @@
                     </tr>
                 {% else %}
                     <tr>
-                        <td>{% if code.closed %}<del>{% endif %}
-                                <b>XXXX</b>
-                                {% if code.closed %}</del>{% endif %}
+                        <td>
+                            {% if code.closed %}<del>{% endif %}
+                            <b>XXXX</b>
+                            {% if code.closed %}</del>{% endif %}
                         </td>
-                        <td>{% if code.closed %}<del>{% endif %}
-                                à {{ code.createdAt | date('H:m:i') }} le {{ code.createdAt | date_fr_long }}
-                        </td>{% if code.closed %}</del>{% endif %}
-                        <td>{% if code.closed %}<del>{% endif %}
-                                {{ code.getRegistrar }}
-                        </td>{% if code.closed %}</del>{% endif %}
+                        <td>
+                            {% if is_granted("ROLE_ADMIN") %}
+                                <a href="{{ path('code_box_list') }}">{{ code.codeBox.name }}</a>
+                            {% else %}
+                                {{ code.codeBox.name }}
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if code.closed %}<del>{% endif %}
+                            à {{ code.createdAt | date('H:m:i') }} le {{ code.createdAt | date_fr_long }}
+                            {% if code.closed %}</del>{% endif %}
+                        </td>
+                        <td>
+                            {% if code.closed %}<del>{% endif %}
+                            {{ code.getRegistrar }}
+                            {% if code.closed %}</del>{% endif %}
+                        </td>
                         <td class="red-text">
                             {% if code.closed %}
                                 inactif
