@@ -4,6 +4,7 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\OrderBy;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -11,6 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @ORM\Table(name="code_box")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\CodeBoxRepository")
+ * @UniqueEntity(fields={"name"}, message="Ce nom est déjà utilisé !")
  */
 class CodeBox
 {
@@ -206,33 +208,33 @@ class CodeBox
     }
 
     /**
-     * @return mixed
+     * @return CodeBoxAccessForShifter
      */
-    public function getAccessForShifter()
+    public function getAccessForShifter() : ?CodeBoxAccessForShifter
     {
         return $this->accessForShifter;
     }
 
     /**
-     * @param mixed $accessForShifter
+     * @param CodeBoxAccessForShifter $accessForShifter
      */
-    public function setAccessForShifter($accessForShifter): void
+    public function setAccessForShifter(?CodeBoxAccessForShifter $accessForShifter): void
     {
         $this->accessForShifter = $accessForShifter;
     }
 
     /**
-     * @return mixed
+     * @return CodeBoxAccessByCode
      */
-    public function getAccessesByCode()
+    public function getAccessesByCode() : ?CodeBoxAccessByCode
     {
         return $this->accessesByCode;
     }
 
     /**
-     * @param mixed $accessesByCode
+     * @param CodeBoxAccessByCode $accessesByCode
      */
-    public function setAccessesByCode($accessesByCode): void
+    public function setAccessesByCode(?CodeBoxAccessByCode $accessesByCode): void
     {
         $this->accessesByCode = $accessesByCode;
     }

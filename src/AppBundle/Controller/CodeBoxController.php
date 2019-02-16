@@ -97,7 +97,6 @@ class CodeBoxController extends Controller
             $em->flush();
 
             $session->getFlashBag()->add('success', 'Le boitier à clé a bien été édité !');
-
             return $this->redirectToRoute('code_box_list');
         }
 
