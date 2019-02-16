@@ -124,7 +124,7 @@ class CodeBoxAccessForShifter
      *
      * @return CodeBoxAccessForShifter
      */
-    public function setCanGenerate($canGenerate)
+    public function setGenerate($canGenerate)
     {
         $this->canGenerate = $canGenerate;
 
@@ -136,7 +136,7 @@ class CodeBoxAccessForShifter
      *
      * @return bool
      */
-    public function getCanGenerate()
+    public function canGenerate()
     {
         return $this->canGenerate;
     }

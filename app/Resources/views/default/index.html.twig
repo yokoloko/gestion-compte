@@ -61,26 +61,32 @@
                 <br>
             {% endif %}
             {% if not is_granted("ROLE_ADMIN") %}
-                {% if is_granted("view",codes | first) %}
-                    {% if (codes | first).registrar == app.user %}
+                {% set firstCode = codes | first %}
+                {% if is_granted("view", firstCode) %}
+                    {% if firstCode.registrar == app.user %}
                         {% if codes | length > 1 %} {# last code is users one, but other codes exist #}
-                            <a href="{{ path("code_new") }}" class="waves-effect waves-light btn deep-purple lighten-1"><i
-                                        class="material-icons left">vpn_key</i>Changer code boîtier à clefs</a>
-                        {% elseif is_granted("create",codes | first) %}
-                            <a href="{{ path("code_new") }}" class="waves-effect waves-light btn deep-purple darken-1"><i class="material-icons left">vpn_key</i>Déposer
-                                les clefs</a>
+                            <a href="{{ path("code_new", {'id': firstCode.codeBox.id}) }}" class="waves-effect waves-light btn deep-purple lighten-1">
+                                <i class="material-icons left">vpn_key</i>Changer code boîtier à clefs
+                            </a>
+                        {% elseif is_granted("create", firstCode) %}
+                            <a href="{{ path("code_new", {'id': firstCode.codeBox.id}) }}" class="waves-effect waves-light btn deep-purple darken-1">
+                                <i class="material-icons left">vpn_key</i>Déposer les clefs
+                            </a>
                         {% endif %}
                     {% else %}
-                        <a href="{{ path("codes_list") }}" class="waves-effect waves-light btn deep-purple lighten-1"><i class="material-icons left">vpn_key</i>Voir
-                            code{% if codes | length > 1 %}s{% endif %} boîtier à clefs</a>
+                        <a href="{{ path("codes_list") }}" class="waves-effect waves-light btn deep-purple lighten-1">
+                            <i class="material-icons left">vpn_key</i>Voir code{% if codes | length > 1 %}s{% endif %} boîtier à clefs
+                        </a>
                         {% if is_granted("create",codes | first) %}
-                            <a href="{{ path("code_new") }}" class="waves-effect waves-light btn deep-purple darken-1"><i class="material-icons left">vpn_key</i>Déposer
-                                les clefs</a>
+                            <a href="{{ path("code_new", {'id': firstCode.codeBox.id}) }}" class="waves-effect waves-light btn deep-purple darken-1">
+                                <i class="material-icons left">vpn_key</i>Déposer les clefs
+                            </a>
                         {% endif %}
                     {% endif %}
-                {% elseif is_granted("create",codes | first) %}
-                    <a href="{{ path("code_new") }}" class="waves-effect waves-light btn deep-purple darken-1"><i
-                                class="material-icons left">vpn_key</i>Déposer les clefs</a>
+                {% elseif is_granted("create", firstCode) %}
+                    <a href="{{ path("code_new", {'id': firstCode.codeBox.id}) }}" class="waves-effect waves-light btn deep-purple darken-1">
+                        <i class="material-icons left">vpn_key</i>Déposer les clefs
+                    </a>
                 {% endif %}
             {% endif %}
 

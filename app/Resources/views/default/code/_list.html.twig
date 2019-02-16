@@ -33,7 +33,13 @@
                             <b>{{ code.value }}</b>
                             {% if code.closed %}</del>{% endif %}
                         </td>
-                        <td><a href="{{ path('code_box_list') }}">{{ code.codeBox.name }}</a></td>
+                        <td>
+                            {% if is_granted("ROLE_SUPER_ADMIN") %}
+                                <a href="{{ path('code_box_list') }}">{{ code.codeBox.name }}</a>
+                            {% else %}
+                                {{ code.codeBox.name }}
+                            {% endif %}
+                        </td>
                         <td>
                             {% if code.closed %}<del>{% endif %}
                             à {{ code.createdAt | date('H:m:i') }} le {{ code.createdAt | date_fr_long }}
