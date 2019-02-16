@@ -4,6 +4,8 @@ namespace AppBundle\Controller;
 
 
 use AppBundle\Entity\Code;
+use AppBundle\Entity\CodeBox;
+use AppBundle\Entity\User;
 use AppBundle\Event\CodeNewEvent;
 use AppBundle\Security\CodeVoter;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -28,11 +30,11 @@ class CodeController extends Controller
     /**
      * Lists all codes.
      *
-     * @Route("/", name="codes_list")
+     * @Route("/{id}", name="codes_list", defaults={"id"=null})
      * @Method("GET")
      * @Security("has_role('ROLE_USER')")
      */
-    public function listAction(Request $request)
+    public function listAction(Request $request, CodeBox $codeBox = null)
     {
         $session = new Session();
 
@@ -43,10 +45,15 @@ class CodeController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
+        $criteria = [];
+        if ($codeBox) {
+            $criteria['codeBox'] = $codeBox;
+        }
         if ($current_app_user->hasRole('ROLE_SUPER_ADMIN')) {
-            $codes = $em->getRepository('AppBundle:Code')->findBy(array(), array('createdAt' => 'DESC'), 100);
+            $codes = $em->getRepository('AppBundle:Code')->findBy($criteria, array('createdAt' => 'DESC'), 100);
         } else {
-            $codes = $em->getRepository('AppBundle:Code')->findBy(array('closed' => 0), array('createdAt' => 'DESC'), 10);
+            $criteria['closed'] = 0;
+            $codes = $em->getRepository('AppBundle:Code')->findBy($criteria, array('createdAt' => 'DESC'), 10);
         }
 
         if (!count($codes)) {
@@ -57,50 +64,58 @@ class CodeController extends Controller
         $this->denyAccessUnlessGranted('view', $codes[0]);
 
         return $this->render('default/code/list.html.twig', array(
-            'codes' => $codes
+            'codes' => $codes,
+            'codeBox' => $codeBox
         ));
     }
 
     /**
      * add new code.
      *
-     * @Route("/new", name="code_new")
+     * @Route("/new/{id}", name="code_new")
      * @Method({"GET","POST"})
      * @Security("has_role('ROLE_USER')")
      */
-    public function newAction(Request $request)
+    public function newAction(Request $request, CodeBox $codeBox)
     {
         $session = new Session();
-        $current_app_user = $this->get('security.token_storage')->getToken()->getUser();
+        /** @var User $user */
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
 
-        $my_open_codes = $em->getRepository('AppBundle:Code')->findBy(array('closed' => 0, 'registrar' => $current_app_user), array('createdAt' => 'DESC'));
-        $old_codes = $em->getRepository('AppBundle:Code')->findBy(array('closed' => 0), array('createdAt' => 'DESC'));
+        $my_open_codes = $em->getRepository('AppBundle:Code')->findBy(array('closed' => 0, 'registrar' => $user, 'codeBox' => $codeBox), array('createdAt' => 'DESC'));
+        $old_codes = $em->getRepository('AppBundle:Code')->findBy(array('closed' => 0, 'codeBox' => $codeBox), array('createdAt' => 'DESC'));
 
         $granted = false;
-        foreach ($old_codes as $code) {
-            $granted = $granted || $this->isGranted('view', $code);
-        }
-        if (!$granted) {
-            return $this->createAccessDeniedException('Oups, les anciens codes ne peuvent pas être lu par ' . $current_app_user->getBeneficiary()->getFirstName());
+        if (count($old_codes) > 0) {
+            foreach ($old_codes as $code) {
+                $granted = $granted || $this->isGranted('view', $code);
+            }
+        } else if ($user->hasRole('ROLE_SUPER_ADMIN')) {
+            $granted = true;
         }
 
+        if (!$granted) {
+            return $this->createAccessDeniedException('Oups, les anciens codes ne peuvent pas être lu par ' . $user->getBeneficiary()->getFirstName());
+        }
         $logger = $this->get('logger');
 
         if (count($my_open_codes)) {
-            $logger->info('CODE : code_new make change screen', array('username' => $current_app_user->getUsername()));
+            $logger->info('CODE : code_new make change screen', array('username' => $user->getUsername()));
             if (count($old_codes) > 1) {
                 return $this->render('default/code/new.html.twig', array(
                     'display' => true,
                     'code' => $my_open_codes[0],
                     'old_codes' => $old_codes,
+                    'codeBox' => $codeBox
                 ));
             } else {
                 return $this->render('default/code/new.html.twig', array(
                     'display' => true,
                     'code' => $my_open_codes[0],
                     'old_codes' => $my_open_codes,
+                    'codeBox' => $codeBox
                 ));
             }
 
@@ -109,8 +124,8 @@ class CodeController extends Controller
         //no code open for this user
 
         if ($request->get('smartphone') === null) { //first visit
-            $logger->info('CODE : code_new create screen', array('username' => $current_app_user->getUsername()));
-            return $this->render('default/code/new.html.twig');
+            $logger->info('CODE : code_new create screen', array('username' => $user->getUsername()));
+            return $this->render('default/code/new.html.twig', ['codeBox' => $codeBox]);
         }
 
         $display = ($request->get('smartphone') == '0');
@@ -121,12 +136,13 @@ class CodeController extends Controller
 
         $code->setClosed(false);
         $code->setCreatedAt(new \DateTime('now'));
-        $code->setRegistrar($current_app_user);
+        $code->setRegistrar($user);
+        $code->setCodeBox($codeBox);
 
         $em->persist($code);
         $em->flush();
 
-        $logger->info('CODE : code_new created', array('username' => $current_app_user->getUsername()));
+        $logger->info('CODE : code_new created', array('username' => $user->getUsername()));
 
         $dispatcher = $this->get('event_dispatcher');
         $dispatcher->dispatch(CodeNewEvent::NAME, new CodeNewEvent($code, $display, $old_codes));
@@ -140,6 +156,7 @@ class CodeController extends Controller
                 'no_smartphone' => true,
                 'code' => $code,
                 'old_codes' => $old_codes,
+                'codeBox' => $codeBox
             ));
         }
 

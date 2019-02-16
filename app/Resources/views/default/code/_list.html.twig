@@ -18,6 +18,7 @@
             <thead>
             <tr>
                 <th>Code</th>
+                <th>Boitier</th>
                 <th>Créé le</th>
                 <th>Membre</th>
                 <th></th>
@@ -31,6 +32,7 @@
                                 <b>{{ code.value }}</b>
                                 {% if code.closed %}</del>{% endif %}
                         </td>
+                        <td>{{ code.codeBox.name }}</td>
                         <td>{% if code.closed %}<del>{% endif %}
                                 à {{ code.createdAt | date('H:m:i') }} le {{ code.createdAt | date_fr_long }}
                         </td>{% if code.closed %}</del>{% endif %}

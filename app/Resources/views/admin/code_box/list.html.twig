@@ -21,7 +21,15 @@
                         {% endif %}
                     </div>
                     <div class="card-action">
-                        <a href="{{ path("code_box_edit", {'id': codeBox.id}) }}"><i class="material-icons left">edit</i></a>
+                        <div class="left">
+                            <a href="{{ path("code_box_edit", {'id': codeBox.id}) }}"><i class="material-icons left">edit</i>Modifier</a>
+                        </div>
+                        <div class="left">
+                            <a href="{{ path("codes_list", {'id': codeBox.id}) }}"><i class="material-icons left">list</i>Codes</a>
+                        </div>
+                        <div class="left">
+                            <a href="{{ path("code_new", {'id': codeBox.id}) }}"><i class="material-icons left">autorenew</i>Générer</a>
+                        </div>
                     </div>
                 </div>
             </div>

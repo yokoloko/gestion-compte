@@ -24,7 +24,7 @@
         </div>
         <div class="modal-footer">
             <a href="#!" class="modal-close red-text btn-flat">Annuler</a>
-            <a href="{{ path('code_new',{'smartphone':false}) }}" class="waves-effect waves-green btn-flat green white-text">OK : Je génére le nouveau code</a>
+            <a href="{{ path('code_new',{'id': codeBox.id, 'smartphone':true}) }}" class="waves-effect waves-green btn-flat green white-text">OK : Je génére le nouveau code</a>
         </div>
     </div>
 
@@ -35,7 +35,7 @@
         </div>
         <div class="modal-footer">
             <a href="#!" class="modal-close red-text btn-flat">Annuler</a>
-            <a href="{{ path('code_new',{'smartphone':true}) }}" class="waves-effect waves-green btn-flat green white-text">lancer la procédure</a>
+            <a href="{{ path('code_new',{'id': codeBox.id, 'smartphone':true}) }}" class="waves-effect waves-green btn-flat green white-text">lancer la procédure</a>
         </div>
     </div>
     {% else %}
@@ -79,9 +79,9 @@
             </div>
             <div class="center-align">
                 {% if no_smartphone is defined %}
-                    <a href="{{ path('code_change_done') }}" class="btn large green"><span class="material-icons">check</span>J'ai noté merci !</a>
+                    <a href="{{ path('code_change_done', {"id": codeBox.id}) }}" class="btn large green"><span class="material-icons">check</span>J'ai noté merci !</a>
                 {% else %}
-                    <a href="{{ path('code_change_done') }}" class="btn large green"><span class="material-icons">check</span>Changement de code effectué !</a>
+                    <a href="{{ path('code_change_done', {"id": codeBox.id}) }}" class="btn large green"><span class="material-icons">check</span>Changement de code effectué !</a>
                 {% endif %}
             </div>
         {% endif %}
