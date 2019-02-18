@@ -1,0 +1,45 @@
+{% extends 'layout.html.twig' %}
+
+{% block breadcrumps %}
+    <a href="{{ path('homepage') }}"><i class="material-icons">home</i></a> <i class="material-icons">chevron_right</i>
+    <a href="{{ path('admin') }}"><i class="material-icons">tune</i>admin</a> <i class="material-icons">chevron_right</i>
+    <a href="{{ path('code_box_list') }}"><i class="material-icons">list</i>Boitiers à clé</a> <i class="material-icons">chevron_right</i>
+    <i class="material-icons">edit</i>
+{% endblock %}
+
+{% block content %}
+    <h4 class="">Editer boitier à clé</h4>
+
+    {{ form_start(form) }}
+    {{ form_row(form.name) }}
+    {{ form_row(form.description) }}
+    {{ form_row(form.enableAccessForShifter) }}
+
+    <div id="access-for-shifter-form">
+        {{ form_row(form.accessForShifter) }}
+    </div>
+    <div>
+        <button type="submit" class="btn waves-effect waves-light"><i class="material-icons left">save</i>Enregistrer</button>
+    </div>
+    {{ form_end(form) }}
+
+    <div>
+        <a class="btn waves-effect waves-light red" href="{{ path('code_box_delete', {"id": codeBox.id}) }}"><i class="material-icons left">delete</i>Supprimer</a>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        $(document).ready(function() {
+            if ($("#code_box_enableAccessForShifter").is(":checked")) {
+                $("#access-for-shifter-form").show();
+            } else {
+                $("#access-for-shifter-form").hide();
+            }
+            $("#code_box_enableAccessForShifter").change(function (e) {
+                $("#access-for-shifter-form").toggle();
+            });
+        });
+    </script>
+{% endblock %}

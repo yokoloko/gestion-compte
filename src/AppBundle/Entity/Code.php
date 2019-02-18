@@ -50,7 +50,7 @@ class Code
     private $registrar;
 
     /**
-     * @ORM\ManyToOne(targetEntity="CodeBox")
+     * @ORM\ManyToOne(targetEntity="CodeBox", inversedBy="codes")
      * @ORM\JoinColumn(name="code_box_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $codeBox;
@@ -171,17 +171,17 @@ class Code
     }
 
     /**
-     * @return mixed
+     * @return CodeBox
      */
-    public function getCodeBox()
+    public function getCodeBox() : ?CodeBox
     {
         return $this->codeBox;
     }
 
     /**
-     * @param mixed $codeBox
+     * @param CodeBox $codeBox
      */
-    public function setCodeBox($codeBox): void
+    public function setCodeBox(?CodeBox $codeBox): void
     {
         $this->codeBox = $codeBox;
     }

@@ -2,14 +2,18 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\OrderBy;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * CodeBox
  *
  * @ORM\Table(name="code_box")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\CodeBoxRepository")
+ * @UniqueEntity(fields={"name"}, message="Ce nom est déjà utilisé !")
  */
 class CodeBox
 {
@@ -26,6 +30,7 @@ class CodeBox
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=55, unique=true)
+     * @Assert\NotBlank()
      */
     private $name;
 
@@ -37,16 +42,31 @@ class CodeBox
     private $description;
 
     /**
+     * @var Collection
      * @ORM\OneToMany(targetEntity="Code", mappedBy="codeBox")
      * @OrderBy({"createdAt" = "DESC"})
      */
     private $codes;
 
     /**
-     * @ORM\OneToMany(targetEntity="ReceivedSms", mappedBy="author",cascade={"persist", "remove"})
+     * @var Collection
+     * @ORM\OneToMany(targetEntity="ReceivedSms", mappedBy="code_box",cascade={"persist", "remove"})
      * @OrderBy({"created_at" = "DESC"})
      */
     private $sms;
+
+    /**
+     * @var CodeBoxAccessForShifter
+     * @Assert\Valid()
+     * @ORM\OneToOne(targetEntity="CodeBoxAccessForShifter", mappedBy="codeBox")
+     */
+    private $accessForShifter;
+
+    /**
+     * @var Collection
+     * @ORM\OneToMany(targetEntity="CodeBoxAccessByCode", mappedBy="codeBox")
+     */
+    private $accessesByCode;
 
     /**
      * Get id.
@@ -107,7 +127,7 @@ class CodeBox
     }
 
     /**
-     * @return mixed
+     * @return Collection
      */
     public function getCodes()
     {
@@ -115,12 +135,13 @@ class CodeBox
     }
 
     /**
-     * @param mixed $codes
+     * @param Collection $codes
      */
     public function setCodes($codes): void
     {
         $this->codes = $codes;
     }
+
     /**
      * Constructor
      */
@@ -159,13 +180,13 @@ class CodeBox
     /**
      * Add sm.
      *
-     * @param \AppBundle\Entity\ReceivedSms $sm
+     * @param \AppBundle\Entity\ReceivedSms $sms
      *
      * @return CodeBox
      */
-    public function addSm(\AppBundle\Entity\ReceivedSms $sm)
+    public function addSms(\AppBundle\Entity\ReceivedSms $sms)
     {
-        $this->sms[] = $sm;
+        $this->sms[] = $sms;
 
         return $this;
     }
@@ -173,22 +194,54 @@ class CodeBox
     /**
      * Remove sm.
      *
-     * @param \AppBundle\Entity\ReceivedSms $sm
+     * @param \AppBundle\Entity\ReceivedSms $sms
      *
      * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
      */
-    public function removeSm(\AppBundle\Entity\ReceivedSms $sm)
+    public function removeSms(\AppBundle\Entity\ReceivedSms $sms)
     {
-        return $this->sms->removeElement($sm);
+        return $this->sms->removeElement($sms);
     }
 
     /**
      * Get sms.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getSms()
     {
         return $this->sms;
+    }
+
+    /**
+     * @return CodeBoxAccessForShifter
+     */
+    public function getAccessForShifter() : ?CodeBoxAccessForShifter
+    {
+        return $this->accessForShifter;
+    }
+
+    /**
+     * @param CodeBoxAccessForShifter $accessForShifter
+     */
+    public function setAccessForShifter(?CodeBoxAccessForShifter $accessForShifter): void
+    {
+        $this->accessForShifter = $accessForShifter;
+    }
+
+    /**
+     * @return Collection|CodeBoxAccessByCode[]
+     */
+    public function getAccessesByCode() : ?Collection
+    {
+        return $this->accessesByCode;
+    }
+
+    /**
+     * @param Collection $accessesByCode
+     */
+    public function setAccessesByCode(?Collection $accessesByCode): void
+    {
+        $this->accessesByCode = $accessesByCode;
     }
 }

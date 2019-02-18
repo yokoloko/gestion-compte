@@ -1,0 +1,48 @@
+{% extends 'layout.html.twig' %}
+
+{% block breadcrumps %}
+    <a href="{{ path('homepage') }}"><i class="material-icons">home</i></a> <i class="material-icons">chevron_right</i>
+    <a href="{{ path('admin') }}"><i class="material-icons">tune</i>admin</a> <i class="material-icons">chevron_right</i>
+    <i class="material-icons">list</i>Boitiers à clé
+{% endblock %}
+
+{% block content %}
+    <h4 class="">Liste des boitiers à clés</h4>
+    <div class="row">
+        {% for codeBox in codeBoxes %}
+            {% set currentCode = codeBox | latestCode %}
+            <div class="col s12 m6">
+                <div class="card blue-grey darken-2 small">
+                    <div class="card-content white-text">
+                        <span class="card-title">{{ codeBox.name }} <i class="material-icons left">lock</i>
+                            {% if currentCode is not null %}
+                                <span class="chip right lighten-5">{{ currentCode.value }}<i class="material-icons left">vpn_key</i></span>
+                            {% endif %}
+                        </span>
+                        <p>{{ codeBox.description }}</p>
+
+                        {% if codeBox.accessForShifter is not null %}
+                            <p>Utilisé pour les créneaux</p>
+                        {% endif %}
+                    </div>
+                    <div class="card-action">
+                        <div class="left">
+                            <a href="{{ path("code_box_edit", {'id': codeBox.id}) }}"><i class="material-icons left">edit</i>Modifier</a>
+                        </div>
+                        <div class="left">
+                            <a href="{{ path("codes_list", {'id': codeBox.id}) }}"><i class="material-icons left">list</i>Codes</a>
+                        </div>
+                        <div class="left">
+                            <a href="{{ path("code_new", {'id': codeBox.id}) }}"><i class="material-icons left">autorenew</i>Générer</a>
+                        </div>
+                        <div class="left">
+                            <a href="{{ path("code_box_access_list", {'id': codeBox.id}) }}"><i class="material-icons left">vpn_key</i>Gérer accès ({{ codeBox.accessesByCode | length }})</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <a href="{{ path('code_box_new') }}" class="btn"><i class="material-icons left">add</i>Ajouter un boitier à clé</a>
+{% endblock %}

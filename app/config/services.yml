@@ -47,6 +47,14 @@ services:
         arguments: ['@event_service']
         tags:
             - { name: twig.extension }
+    app.twig.extensions.code_box:
+      class: AppBundle\Twig\Extension\CodeBoxExtension
+      arguments:
+        - '@security.token_storage'
+        - '@security.authorization_checker'
+        - '@doctrine.orm.entity_manager'
+      tags:
+        - { name: twig.extension }
 
     app.form.registration:
         class: AppBundle\Form\RegistrationType

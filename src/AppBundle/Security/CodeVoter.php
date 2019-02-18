@@ -93,9 +93,13 @@ class CodeVoter extends Voter
     private function canAdd(Code $code, User $user)
     {
         $now = new \DateTime('now');
-        if ($this->canView($code, $user)){ //can add only if last code can be seen
-            if ($code->getRegistrar() != $user || $code->getCreatedAt()->format('Y m d')!=($now->format('Y m d'))){ // on ne change pas son propre code
-                if ($this->isLocationOk()){ // et si l'utilisateur est physiquement à l'épicerie
+        if ($this->canView($code, $user)) { //can add only if last code can be seen
+            $shifterAccess = $code->getCodeBox()->getAccessForShifter();
+            if (!$shifterAccess || !$shifterAccess->getCanGenerate()) {
+                return false;
+            }
+            if ($code->getRegistrar() != $user || $code->getCreatedAt()->format('Y m d')!=($now->format('Y m d'))) { // on ne change pas son propre code
+                if ($this->isLocationOk()) { // et si l'utilisateur est physiquement à l'épicerie
                     return true;
                 }
             }
@@ -107,25 +111,29 @@ class CodeVoter extends Voter
 
     private function canView(Code $code, User $user)
     {
-        if (!$code->getId())
+        // We need to have a valid code from a box with shifter access
+        if (!$code->getId() || !$code->getCodeBox() || !$code->getCodeBox()->getAccessForShifter()) {
             return false;
+        }
 
-        if ($code->getRegistrar() === $user){ // my code
+        if ($code->getRegistrar() === $user) { // my code
             return true;
         }
 
         if ($user->getBeneficiary()) {
-            if ($this->container->get("shift_service")->isBeginner($user->getBeneficiary())) // not for beginner
+            if ($this->container->get("shift_service")->isBeginner($user->getBeneficiary())) {
                 return false;
+            }
+            $codeBoxAccessForShifter = $code->getCodeBox()->getAccessForShifter();
             $shifts = $user->getBeneficiary()->getMembership()->getShiftsOfCycle(0);
             $y = new \DateTime('Yesterday');
             $y->setTime(23,59,59);
             $some_time_ago = new \DateTime();
             $in_some_time = new \DateTime();
-            $some_time_ago->sub(new \DateInterval("PT1H")); //time - 60min TODO put in conf
-            $in_some_time->add(new \DateInterval("PT15M")); //time + 15min TODO put in conf
-            foreach ($shifts as $shift){
-                if (($shift->getStart() < $in_some_time) && $shift->getStart() > $y && ($shift->getEnd() > $some_time_ago)){ // si l'utilisateur à un créneau aujourd'hui qu'il a commencé et qu'il n'est pas fini
+            $some_time_ago->sub(new \DateInterval("PT" . $codeBoxAccessForShifter->getAfterDelay() . 'M'));
+            $in_some_time->add(new \DateInterval("PT" . $codeBoxAccessForShifter->getBeforeDelay() . 'M'));
+            foreach ($shifts as $shift) {
+                if (($shift->getStart() < $in_some_time) && $shift->getStart() > $y && ($shift->getEnd() > $some_time_ago)) { // si l'utilisateur à un créneau aujourd'hui qu'il a commencé et qu'il n'est pas fini
                     return true;
                 }
             }
@@ -140,7 +148,8 @@ class CodeVoter extends Voter
     }
 
     //\AppBundle\Security\UserVoter::isLocationOk DUPLICATED
-    private function isLocationOk(){
+    private function isLocationOk()
+    {
         $ip = $this->container->get('request_stack')->getCurrentRequest()->getClientIp();
         $ips = $this->container->getParameter('place_local_ip_address');
         $ips = explode(',',$ips);

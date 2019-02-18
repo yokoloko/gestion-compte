@@ -1,0 +1,21 @@
+{% extends 'layout.html.twig' %}
+
+{% block breadcrumps %}
+    <a href="{{ path('homepage') }}"><i class="material-icons">home</i></a> <i class="material-icons">chevron_right</i>
+    <a href="{{ path('admin') }}"><i class="material-icons">tune</i>admin</a> <i class="material-icons">chevron_right</i>
+    <a href="{{ path('code_box_list') }}"><i class="material-icons">list</i>Boitiers à clé</a>
+    <i class="material-icons">chevron_right</i>{{ codeBox.name }}
+    <i class="material-icons">add</i>Ajout d'un accès
+{% endblock %}
+
+{% block content %}
+    <h4 class="">Ajouter un accès pour {{ codeBox.name }}</h4>
+
+    {{ form_start(form) }}
+    {{ form_rest(form) }}
+
+    <div>
+        <button type="submit" class="btn waves-effect waves-light"><i class="material-icons left">save</i>Créer</button>
+    </div>
+    {{ form_end(form) }}
+{% endblock %}
